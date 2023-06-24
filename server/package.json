@@ -1,0 +1,32 @@
+{
+  "name": "auth-svc",
+  "version": "1.0.0",
+  "description": "Auth Service",
+  "main": "server.js",
+  "scripts": {
+    "test": "mocha tests/index.spec.js --exit",
+    "coverage": "nyc --reporter=html npm test",
+    "start": "node server.js",
+    "go": "nodemon server.js",
+    "lint": "eslint .",
+    "test:watch": "mocha tests/index.spec.js --watch"
+  },
+  "keywords": [
+    "node.js",
+    "auth-service"
+  ],
+  "author": "shrawan lakhe",
+  "dependencies": {
+    "bluebird": "^3.7.2",
+    "dotenv": "^8.2.0",
+    "events": "^3.2.0",
+    "grpc": "^1.24.3",
+    "node-pre-gyp": "^0.17.0",
+    "moment": "^2.29.1"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "nyc": "^15.1.0",
+    "sinon": "^9.2.0"
+  }
+}

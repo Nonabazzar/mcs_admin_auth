@@ -1,0 +1,48 @@
+FROM node:12-alpine
+ARG GRPC_HEALTH_PROBE_VERSION=v0.2.0
+ENV GRPC_HEALTH_PROBE_VERSION=$GRPC_HEALTH_PROBE_VERSION
+
+RUN apk update && apk add python g++ make curl && rm -rf /var/cache/apk/* && \
+    wget -qO/bin/grpc_health_probe https://github.com/grpc-ecosystem/grpc-health-probe/releases/download/${GRPC_HEALTH_PROBE_VERSION}/grpc_health_probe-linux-amd64 && \
+    chmod +x /bin/grpc_health_probe
+
+LABEL description="AuthService"
+LABEL version="3.1"
+LABEL vendor="Everly"
+
+ARG WORKING_DIR=/auth-svc
+ARG COMMON_DIR=/common-helpers
+ARG NON_ROOT_USER=everly
+ARG PORT=50052
+
+ENV NODE_ENV production
+
+RUN mkdir -p $WORKING_DIR/server/ \
+    mkdir -p $WORKING_DIR/client/ \
+    mkdir -p $COMMON_DIR/
+
+# Common Helper Utils section
+COPY ./common-helpers/package*.json $COMMON_DIR/
+WORKDIR $COMMON_DIR/
+RUN npm install
+COPY ./common-helpers/ $COMMON_DIR
+
+# Auth Service Helper Utils section
+
+COPY ./server/package*.json $WORKING_DIR/server/
+WORKDIR $WORKING_DIR/server
+RUN npm install --only=production
+COPY ./server $WORKING_DIR/server/
+RUN echo "" > $WORKING_DIR/server/conf/.env
+
+COPY ./client/package*.json $WORKING_DIR/client/
+WORKDIR $WORKING_DIR/client
+RUN npm install
+COPY ./client $WORKING_DIR/client/
+
+WORKDIR $WORKING_DIR/server/
+
+#Expose the port
+EXPOSE $PORT
+
+CMD [ "node", "server.js" ]

@@ -1,0 +1,13 @@
+node_modules/
+admin_auth/server/node_modules/
+admin_auth/client/node_modules/
+common-helpers/node_modules
+npm-debug.log
+
+.git
+.gitignore
+
+# Docker configuration
+Dockerfile
+Makefile
+docker-compose.yml

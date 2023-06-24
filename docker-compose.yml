@@ -1,0 +1,19 @@
+version: '3'
+services:
+  auth-svc:
+    container_name: auth-svc
+    image: node:10
+    restart: always
+    volumes:
+      - ./:/auth-svc
+      - ../common-helpers/:/common-helpers
+      - ./server/conf/.env.docker:/auth-svc/server/conf/.env
+    networks:
+      - everly
+    entrypoint: /bin/sh
+    command: -c "sleep 5 && cd /common-helpers && npm install && cd /auth-svc/server && npm install && cd /auth-svc/client && npm install && cd /auth-svc/server && node server.js"
+    ports:
+      - "50052:50052"
+networks:
+  everly:
+    external: true
